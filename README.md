@@ -11,6 +11,7 @@
 * [4. Implementation](#4-implementation)
   * [4.1 DFA Implementation in Prolog](#41-dfa-implementation-in-prolog)
   * [4.2 Regular Expression Implementation in Python](#42-regular-expression-implementation-in-python)
+  * [4.3 How to Run](#43-how-to-run)
 * [5. Tests](#5-tests)
   * [5.1 DFA Tests (Prolog)](#51-dfa-tests-prolog)
   * [5.2 Regex Tests (Python)](#52-regex-tests-python)
@@ -102,7 +103,7 @@ This is the most concise and commonly used representation in practical applicati
 
 The following diagram represents the deterministic finite automaton used to recognize the language:
 
-![DFA Diagram](https://media.cleanshot.cloud/media/83749/DwC0wEVypT6K30V2fDBYXkTMXfOFHxfjdG6f1vBU.jpeg?Expires=1774351787&Signature=Jkj9IzrEcHyHCEG1TeiPAshlgC4-qilYhpxtAoV-xOuuA1O0f8PrJMxFci8nMbj2sTwQjYBbGuTfe1It6YFKyWfkNHdz2FslKb8BB~YNbLT3biATRw2EWbIjSVyhBYv72n~5zueI0Za~FALmDY~aYEz6EJfFgVKigUZ6YCeuUa23qT~mVAtZXNswHMaHMvrNlwtjJh22qiXuFGiWbhCXDxDzuxZ~1eD70CN9zlVehOHUCffwrlIBrACyXUx26h6oCuiE~ds8H8JY0ZWlU~FBBahakp8E6ELf~lIh-Oe2wsGJth04Z8YyZTbgPtEUBpwfanm~X2IDnJH6oXCgh7BoZw__&Key-Pair-Id=K269JMAT9ZF4GZ)
+![DFA Diagram](images/dfa_diagram.jpeg)
 
 #### Diagram Interpretation
 
@@ -213,11 +214,11 @@ These properties ensure the automaton is well-defined and suitable for implement
 
 ### 3.3 From NFA to DFA
 
-![NFA Diagram](https://media.cleanshot.cloud/media/83749/ioRHYNKuQo9JCsfqQaDUJGjWNhtW1TAvV7RKUUxq.jpeg?Expires=1774350885&Signature=ssh9ZDK0aaXgcjzT99xpsC-WUtNImKanNwrWuytD89jkAVrOLU1gGZoapkhZEIwKYcEwaZ8qaq3PQwNoy8Dhz5YAiN2t-71hY1TL9Sl37PrmHqfQpSeBMYpGg5S4FkXs3tO-FnEzpjS-VqrIg29RHnDvQrzwM7jwliIu0MqoE27b9uVEVhkqh3M4yRWPyF5c1GlVGM3vBMNGynaBrWz7sqhy6brBe1Zcd6k42~VvbTRIMvipNmt1qBdHWZI6I~KVlM~pv5tXf4RR7hpNNm3YLlFbyyFu~-14yfY5xwCCaeuj2HprhoNj58QoMyy1BLfsZWX04Dz7uT-g6QKaY2bbHQ__&Key-Pair-Id=K269JMAT9ZF4GZ)
+![NFA Diagram](images/nfa_diagram.jpeg)
 
 During the design process, the system can be conceptually viewed as a **non-deterministic finite automaton (NFA)**, since multiple matching paths may exist when detecting substrings.
 
-For implementation, it was converted into a **deterministic finite automaton (DFA)** using the classical subset construction method.
+For implementation, it was converted into a **deterministic finite automaton (DFA)** using the standard procedure for turning an NFA into an equivalent DFA.
 
 This guarantees:
 
@@ -225,7 +226,7 @@ This guarantees:
 * No ambiguity during execution
 * Direct compatibility with programming implementations
 
-Additionally, all missing transitions were defined to ensure the DFA handles the entire alphabet Σ, making it a total function.
+Additionally, all missing transitions were defined to ensure the DFA handles the entire alphabet Σ, so that the automaton has a defined transition for every symbol of Σ in every state.
 
 This completes the formal foundation of the project. The next sections will focus on implementation and testing.
 
@@ -309,6 +310,69 @@ hello -> REJECTED
 * The regex engine handles pattern matching efficiently without explicit state tracking
 
 This approach provides a concise and practical alternative to the DFA.
+
+---
+
+### 4.3 How to Run
+
+This project contains two independent implementations of the same language: a **DFA in Prolog** and a **regular expression in Python**. Each can be run on its own.
+
+#### Prerequisites
+
+| Component | Requirement |
+| --------- | ----------- |
+| Python implementation | Python 3.x (uses only the standard library: `re`, `unittest`) |
+| Prolog implementation | SWI-Prolog (`swipl`) |
+
+#### Regular Expression (Python)
+
+Run the interactive menu to test words one by one:
+
+```bash
+python3 regex.py
+```
+
+You will be prompted to enter a word; the program prints whether it is `ACCEPTED` or `REJECTED`. Choose option `2` to exit.
+
+Run the automated test suite:
+
+```bash
+python3 -m unittest test_regex -v
+```
+
+All 10 tests should report `ok`.
+
+#### DFA (Prolog)
+
+Load the automaton in an interactive session and query individual words:
+
+```bash
+swipl roots_dfa.pl
+```
+
+```prolog
+?- parse_word(beneficial).
+beneficial -> ACCEPTED
+
+?- parse_word(ben).
+ben -> REJECTED
+
+?- halt.        % exit SWI-Prolog
+```
+
+Run the automated test suite (the test file loads `roots_dfa.pl` automatically):
+
+```bash
+swipl roots_dfa_tests.pl
+```
+
+```prolog
+?- run_all_tests.
+```
+
+All 10 cases should report `PASSED`.
+
+In SWI-Prolog, every query typed at the `?-` prompt must end with a period followed by Enter. When a query succeeds, the interpreter also prints `true.`, which only means the goal was satisfied and does not indicate any error.
 
 ---
 

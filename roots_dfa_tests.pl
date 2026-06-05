@@ -1,5 +1,6 @@
 % roots_dfa_tests.pl
 
+:- consult(roots_dfa).
 
 % ACCEPTED
 
@@ -22,7 +23,7 @@ test_reject_5 :- \+ accepts(science).
 
 % RUNNER
 
-run_tests :-
+run_all_tests :-
     write('--- ACCEPT TESTS ---'), nl,
     run_test(test_accept_1, beneficial),
     run_test(test_accept_2, benefactor),

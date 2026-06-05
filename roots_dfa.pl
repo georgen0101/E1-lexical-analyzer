@@ -1,4 +1,4 @@
-% roots_dfa.pls
+% roots_dfa.pl
 % Author: Jorge Nieto
 % Date: March 23, 2026
 % Project: Lexical Analysis using DFA
